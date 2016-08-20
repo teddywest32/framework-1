@@ -11,6 +11,10 @@ class QueueWorkerTest extends PHPUnit_Framework_TestCase
 
     public function testJobIsPoppedOffQueueAndProcessed()
     {
+        if (PHP_VERSION === '7.1.0beta3') {
+            $this->markTestSkipped('Segfaults on PHP 7.1 beta 3');
+        }
+
         $worker = $this->getMock('Illuminate\Queue\Worker', ['process'], [$manager = m::mock('Illuminate\Queue\QueueManager')]);
         $manager->shouldReceive('connection')->once()->with('connection')->andReturn($connection = m::mock('StdClass'));
         $manager->shouldReceive('getName')->andReturn('connection');
